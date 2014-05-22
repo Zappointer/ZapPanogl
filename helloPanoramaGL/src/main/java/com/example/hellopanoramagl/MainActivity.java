@@ -18,6 +18,7 @@
 
 package com.example.hellopanoramagl;
 
+import com.example.testobj.PLHotspotCube;
 import com.panoramagl.PLCubicPanorama;
 import com.panoramagl.PLCylindricalPanorama;
 import com.panoramagl.PLICamera;
@@ -41,6 +42,7 @@ import com.panoramagl.utils.PLUtils;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -82,6 +84,12 @@ public class MainActivity extends PLView
         	public void onDidCompleteLoader(PLIView view, PLILoader loader)
         	{
         		setControlsEnabled(true);
+        		Log.i("JackTest", "onDidCompleteLoader");
+        		PLIPanorama panorama = null;
+        		panorama = MainActivity.this.getPanorama();
+        		panorama.addHotspot(new PLHotspotCube(2, 0, 0));
+        		//this.startTransition(new PLTransitionBlend(2.0f), panorama); //or use this.setPanorama(panorama);
+        		//MainActivity.this.setPanorama(panorama);
         	}
         	
         	@Override
@@ -281,8 +289,9 @@ public class MainActivity extends PLView
 	    		default:
 	    			break;
     		}
-    		if(loader != null)
+    		if(loader != null) {
     			this.load(loader, true, new PLTransitionBlend(2.0f));
+    		}
     	}
     	catch(Throwable e)
     	{
