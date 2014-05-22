@@ -51,6 +51,7 @@ import com.panoramagl.utils.PLLog;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.PixelFormat;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -1795,6 +1796,9 @@ public class PLView extends Activity implements PLIView, SensorEventListener, On
 		public PLSurfaceView(Context context, GLSurfaceView.Renderer renderer)
 		{
 			super(context);
+			//setZOrderOnTop(true);  //The order is Z should be determined in frame layout
+			setEGLConfigChooser(8, 8, 8, 8, 16, 0);
+			getHolder().setFormat(PixelFormat.RGBA_8888);
 			this.setRenderer(renderer);
 			this.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
 		}

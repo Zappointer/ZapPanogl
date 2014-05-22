@@ -37,7 +37,6 @@ public class PLBlankPanorama extends PLPanoramaBase
 	public PLBlankPanorama()
 	{
 		super();
-		super.setLocked(true);
 	}
 	
 	@Override
@@ -83,17 +82,13 @@ public class PLBlankPanorama extends PLPanoramaBase
 		mColor.setValues(red, green, blue, 1.0f);
 	}
 	
-	@Override
-	public void setLocked(boolean isLocked)
-	{
-	}
 	
 	/**render methods*/
 	
 	@Override
 	protected void internalRender(GL10 gl, PLIRenderer renderer)
 	{
-		gl.glClearColor(mColor.red, mColor.green, mColor.blue, 1.0f);
+		gl.glClearColor(mColor.red, mColor.green, mColor.blue, 0.0f);
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 	}
 	
