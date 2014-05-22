@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/ZapPanogl.iml" filepath="$PROJECT_DIR$/ZapPanogl.iml" />
+      <module fileurl="file://$PROJECT_DIR$/helloPanoramaGL/helloPanoramaGL.iml" filepath="$PROJECT_DIR$/helloPanoramaGL/helloPanoramaGL.iml" />
+      <module fileurl="file://$PROJECT_DIR$/panoramaGL/panoramaGL.iml" filepath="$PROJECT_DIR$/panoramaGL/panoramaGL.iml" />
+    </modules>
+  </component>
+</project>
+
