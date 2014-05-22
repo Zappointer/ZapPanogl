@@ -5,6 +5,7 @@
     <string name="action_settings">Settings</string>
 	<string name="spinner_prompt">Select the panorama type</string>
 	<string-array name="panorama_types">
+	    <item>Camera View</item>
 	    <item>Cubic</item>
 	    <item>Spherical2</item>
 	    <item>Spherical</item>

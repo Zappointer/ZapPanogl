@@ -18,7 +18,10 @@
 
 package com.example.hellopanoramagl;
 
+import org.json.JSONObject;
+
 import com.example.testobj.PLHotspotCube;
+import com.panoramagl.PLBlankPanorama;
 import com.panoramagl.PLCubicPanorama;
 import com.panoramagl.PLCylindricalPanorama;
 import com.panoramagl.PLICamera;
@@ -30,7 +33,6 @@ import com.panoramagl.PLSphericalPanorama;
 import com.panoramagl.PLView;
 import com.panoramagl.PLViewListener;
 import com.panoramagl.enumerations.PLCubeFaceOrientation;
-import com.panoramagl.hotspots.PLHotspot;
 import com.panoramagl.hotspots.PLIHotspot;
 import com.panoramagl.ios.structs.CGPoint;
 import com.panoramagl.loaders.PLILoader;
@@ -42,7 +44,10 @@ import com.panoramagl.utils.PLUtils;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.HandlerThread;
 import android.util.Log;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -55,6 +60,13 @@ import android.view.View.OnClickListener;
 
 public class MainActivity extends PLView
 {
+	CameraPreview mCameraPreview;
+	final String TAG = "MainActivity";
+	final int PANORAMA_INDEX = 100;
+	int mCurrentSpinnerPos = -1;
+	final int CAMERA_VIEW_POS = 0;// Need to match string array
+	SurfaceView mSurfaceView;
+	
 	/**member variables*/
 	
 	private Spinner mPanoramaTypeSpinner;
@@ -88,8 +100,6 @@ public class MainActivity extends PLView
         		PLIPanorama panorama = null;
         		panorama = MainActivity.this.getPanorama();
         		panorama.addHotspot(new PLHotspotCube(2, 0, 0));
-        		//this.startTransition(new PLTransitionBlend(2.0f), panorama); //or use this.setPanorama(panorama);
-        		//MainActivity.this.setPanorama(panorama);
         	}
         	
         	@Override
@@ -115,6 +125,14 @@ public class MainActivity extends PLView
         	{
         		setControlsEnabled(true);
         	}
+        	
+        	@Override
+        	public void onDidResetCamera(PLIView view, Object sender, PLICamera camera)
+        	{
+        		if (mCurrentSpinnerPos == 0) {
+        			loadPanoramaFromJSON(mCurrentSpinnerPos);
+        		}
+        	}
 		});
 	}
 	
@@ -130,7 +148,16 @@ public class MainActivity extends PLView
 		ViewGroup mainView = (ViewGroup)this.getLayoutInflater().inflate(R.layout.activity_main, null);
 		//Add 360 view
     	mainView.addView(contentView, 0);
-        //Spinner control
+        
+    	HandlerThread handlerThread = new HandlerThread("PreviewHandler");
+	    handlerThread.start();
+        mCameraPreview = new CameraPreview(handlerThread, this);
+        mSurfaceView = (SurfaceView) mainView.findViewById(R.id.camera_preview);
+        SurfaceHolder surfaceHolder = mSurfaceView.getHolder();
+        surfaceHolder.addCallback(mCameraPreview);
+        surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+    	
+    	//Spinner control
         mPanoramaTypeSpinner = (Spinner)mainView.findViewById(R.id.spinner_panorama_type);
         ArrayAdapter<?> adapter = ArrayAdapter.createFromResource(this, R.array.panorama_types, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -140,7 +167,15 @@ public class MainActivity extends PLView
 			@Override
 			public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id)
 			{
+				mCurrentSpinnerPos = position;
 				loadPanoramaFromJSON(position);
+				if (position == CAMERA_VIEW_POS) {
+					mSurfaceView.setVisibility(View.VISIBLE);
+					mZoomControls.setVisibility(View.GONE);
+				}else{
+					mSurfaceView.setVisibility(View.GONE);
+					mZoomControls.setVisibility(View.VISIBLE);
+				}
 			}
 
 			@Override
@@ -199,7 +234,6 @@ public class MainActivity extends PLView
      * Load panorama image manually
      * @param index Spinner position where 0 = cubic, 1 = spherical2, 2 = spherical, 3 = cylindrical
      */
-    @SuppressWarnings("unused")
 	private void loadPanorama(int index)
     {
 		try
@@ -240,15 +274,35 @@ public class MainActivity extends PLView
 		        	cylindricalPanorama.setImage(new PLImage(PLUtils.getBitmap(context, R.raw.quito1_s), false));
 		            panorama = cylindricalPanorama;
 		    		break;
+		    		
+		    	case PANORAMA_INDEX:
+		    		PLBlankPanorama blankPanorama = new PLBlankPanorama();
+		    		panorama = blankPanorama;
+		    		break;
 		    	default:
+		    		Log.e(TAG,"Wrong index for loadPanorama : " + index);
 		    		break;
 	    	}
 	    	if(panorama != null)
 	    	{
+	    		PLICamera pliCamera = panorama.getCamera();
 	    		//Set camera rotation
-	    		panorama.getCamera().lookAt(0.0f, 170.0f);
+	    		boolean retLookAt = pliCamera.lookAt(0.0f, 170.0f);
+	    		if (retLookAt == false) {
+	    			Log.e("JackTest","Failed to set pliCamera lookAt");
+	    		}
+	    		pliCamera.setInitialFov(30);
+	    		pliCamera.setFov(30);
 		        //Add a hotspot
-		        panorama.addHotspot(new PLHotspot(1, new PLImage(PLUtils.getBitmap(context, R.raw.hotspot), false), 0.0f, 170.0f, 0.05f, 0.05f));
+		        //panorama.addHotspot(new PLHotspot(1, new PLImage(PLUtils.getBitmap(context, R.raw.hotspot), false), 0.0f, 170.0f, 0.05f, 0.05f));
+	    		panorama.addHotspot(new PLHotspotCube(2, 0, 0));
+	    		startSensorialRotation();
+	    		
+	    		setResetEnabled( true );
+        		setNumberOfTouchesForReset( 3 );
+			    setShakeResetEnabled(true);
+			    setShakeThreshold(1300);
+	    		
 		        //Reset view
 		        this.reset();
 		        //Load panorama
@@ -274,16 +328,19 @@ public class MainActivity extends PLView
     		PLILoader loader = null;
     		switch(index)
     		{
-	    		case 0:
+    			case CAMERA_VIEW_POS:
+    				loadPanorama(PANORAMA_INDEX);
+    				break;
+	    		case 1:
 	    			loader = new PLJSONLoader("res://raw/json_cubic");
 	    			break;
-	    		case 1:
+	    		case 2:
 	    			loader = new PLJSONLoader("res://raw/json_spherical2");
 	    			break;
-	    		case 2:
+	    		case 3:
 	    			loader = new PLJSONLoader("res://raw/json_spherical");
 	    			break;
-	    		case 3:
+	    		case 4:
 	    			loader = new PLJSONLoader("res://raw/json_cylindrical");
 	    			break;
 	    		default:
