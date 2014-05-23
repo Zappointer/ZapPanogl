@@ -1,4 +1,4 @@
-package com.example.testobj;
+package com.invisibi.testobj;
 
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;

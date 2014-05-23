@@ -1,4 +1,4 @@
-package com.example.hellopanoramagl;
+package com.invisibi.zappanoramagl;
 
 import java.io.IOException;
 

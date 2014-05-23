@@ -16,11 +16,9 @@
  * limitations under the License.
  */
 
-package com.example.hellopanoramagl;
+package com.invisibi.zappanoramagl;
 
-import org.json.JSONObject;
-
-import com.example.testobj.PLHotspotCube;
+import com.invisibi.testobj.PLHotspotCube;
 import com.panoramagl.PLBlankPanorama;
 import com.panoramagl.PLCubicPanorama;
 import com.panoramagl.PLCylindricalPanorama;
