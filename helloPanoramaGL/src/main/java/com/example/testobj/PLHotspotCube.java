@@ -18,12 +18,14 @@ public class PLHotspotCube extends PLHotspot{
 	}
 		
 	private void TranslateRotate(GL10 gl) {
-		float Tx = 4.f, Ty = 10.f, Tz = -10.f;
-		gl.glRotatef(mAngleWorld, 0.0f, 1.0f, 0.0f);
+		// Start position
+		//float Tx = 4.f, Ty = 10.f, Tz = -10.f;
+        float Tx = 0.f, Ty = 0.f, Tz = -10.f;
+
+        gl.glRotatef(mAngleWorld, 0.0f, 1.0f, 0.0f);
 		gl.glTranslatef(Tx, Ty, Tz);
 		gl.glRotatef(mAngle, 0.0f, 1.0f, 0.0f);
 		gl.glRotatef(mAngle, 1.0f, 0.0f, 0.0f);
-		gl.glRotatef(-mAngleWorld, 0.0f, 1.0f, 0.0f);
 	}
 	
 	@Override
