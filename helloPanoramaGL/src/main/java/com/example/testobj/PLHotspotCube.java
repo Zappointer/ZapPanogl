@@ -20,7 +20,7 @@ public class PLHotspotCube extends PLHotspot{
 	private void TranslateRotate(GL10 gl) {
 		// Start position
 		//float Tx = 4.f, Ty = 10.f, Tz = -10.f;
-        float Tx = 0.f, Ty = 0.f, Tz = -10.f;
+        float Tx = 0.f, Ty = 0.f, Tz = -12.f;
 
         gl.glRotatef(mAngleWorld, 0.0f, 1.0f, 0.0f);
 		gl.glTranslatef(Tx, Ty, Tz);
