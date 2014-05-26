@@ -1,0 +1,9 @@
+# generated files
+build/
+obj/
+objs/
+libs/
+
+# local.properties
+local.properties
+
