@@ -14,17 +14,15 @@ import javax.microedition.khronos.opengles.GL10;
  */
 public class PLHotspotText extends PLHotspot{
 
-    private final String JSON_PATH = "/tesseract/textobj.json";
-
-    public PLHotspotText(long identifier, float atv, float ath) {
-        super(identifier, atv, ath);
+    public PLHotspotText() {
+        super(0, 0, 0);
     }
 
     @Override
     protected void initializeValues()
     {
         super.initializeValues();
-        new LoadTextObjTask().execute(MyUtils.SDCARD_PATH + JSON_PATH);
+        new LoadTextObjTask().execute(MyUtils.SDCARD_PATH + LoadTextObjTask.DEFAULT_JSON_PATH);
     }
 
     @Override

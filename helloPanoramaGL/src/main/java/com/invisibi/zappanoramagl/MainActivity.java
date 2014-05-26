@@ -133,6 +133,7 @@ public class MainActivity extends PLView
         		}
         	}
 		});
+        ZapApp.getInstance().SetContext(this);
 	}
 	
 	/**
@@ -297,7 +298,7 @@ public class MainActivity extends PLView
 	    		panorama.addHotspot(new PLHotspotCube(2, 0, 0));
 
                 if (mHotspotText!=null)  mHotspotText.release();
-                mHotspotText = new PLHotspotText(2, 0, 0);
+                mHotspotText = new PLHotspotText();
                 panorama.addHotspot(mHotspotText);
 	    		startSensorialRotation();
 	    		
@@ -361,6 +362,7 @@ public class MainActivity extends PLView
 
     @Override
     protected void onDestroy() {
+        ZapApp.getInstance().SetContext(null);
         super.onDestroy();
 
         if (mHotspotText!=null)  mHotspotText.release();
