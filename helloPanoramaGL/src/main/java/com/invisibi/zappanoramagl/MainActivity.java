@@ -19,6 +19,7 @@
 package com.invisibi.zappanoramagl;
 
 import com.invisibi.testobj.PLHotspotCube;
+import com.invisibi.testobj.PLHotspotText;
 import com.panoramagl.PLBlankPanorama;
 import com.panoramagl.PLCubicPanorama;
 import com.panoramagl.PLCylindricalPanorama;
@@ -69,7 +70,7 @@ public class MainActivity extends PLView
 	
 	private Spinner mPanoramaTypeSpinner;
 	private ZoomControls mZoomControls;
-	
+	private PLHotspotText mHotspotText;
 	/**init methods*/
 	
 	@Override
@@ -294,6 +295,10 @@ public class MainActivity extends PLView
 		        //Add a hotspot
 		        //panorama.addHotspot(new PLHotspot(1, new PLImage(PLUtils.getBitmap(context, R.raw.hotspot), false), 0.0f, 170.0f, 0.05f, 0.05f));
 	    		panorama.addHotspot(new PLHotspotCube(2, 0, 0));
+
+                if (mHotspotText!=null)  mHotspotText.release();
+                mHotspotText = new PLHotspotText(2, 0, 0);
+                panorama.addHotspot(mHotspotText);
 	    		startSensorialRotation();
 	    		
 	    		setResetEnabled( true );
@@ -352,5 +357,12 @@ public class MainActivity extends PLView
     	{
     		Toast.makeText(this.getApplicationContext(), "Error: " + e, Toast.LENGTH_SHORT).show();
     	}
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (mHotspotText!=null)  mHotspotText.release();
     }
 }
