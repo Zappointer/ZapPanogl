@@ -27,11 +27,17 @@ JNIEXPORT void JNICALL Java_com_invisibi_opengles_TextObjManager_nativeAddTextOb
 			pfparams[3],pfparams[4],pfparams[5]);
 
 	MyTextObj* ptextObj = new MyTextObj(nativeString);
-	ptextObj->OpenFont(nativeTTFPath);
-	ptextObj->SetColor(pfparams[0],pfparams[1],pfparams[2]);
-	ptextObj->SetPos(pfparams[3],pfparams[4],pfparams[5]);
-	ptextObj->SetType((int)pfparams[6]);
-	pMyTextObj.push_back(ptextObj);
+	if ( ptextObj->OpenFont(nativeTTFPath) )
+	{
+	    ptextObj->SetColor(pfparams[0],pfparams[1],pfparams[2]);
+	    ptextObj->SetPos(pfparams[3],pfparams[4],pfparams[5]);
+	    ptextObj->SetType((int)pfparams[6]);
+	    pMyTextObj.push_back(ptextObj);
+	}
+	else
+	{
+	    delete ptextObj;
+	}
 
 	jenv->ReleaseStringUTFChars(text, nativeString);
 	jenv->DeleteLocalRef(text);
