@@ -72,7 +72,10 @@ public class MainActivity extends PLView
 	private ZoomControls mZoomControls;
 	private PLHotspotText mHotspotText;
 	/**init methods*/
-	
+
+    final static String ACTION_ZAP_PANORAMAGL = "action_zap_panoramagl";
+    final static String EXTRA_TEXTOBJ_JSON = "textobj_json";
+
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
@@ -367,4 +370,4 @@ public class MainActivity extends PLView
 
         if (mHotspotText!=null)  mHotspotText.release();
     }
-}
+}
